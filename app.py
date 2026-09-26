@@ -38,28 +38,32 @@ with col2:
     investment_amount = st.number_input("เงินลงทุนต่อเดือน (บาท)", min_value=0.0, value=0.0, step=500.0)
 
 if st.button("🔍 ทำนายกลุ่มผู้ใช้ (Predict Cluster)"):
-    # คำนวณตัวแปรอัตราส่วนตามสูตร Formula
-    discretionary_ratio = discretionary_spending / expense if expense > 0 else 0
-    essential_ratio = essential_spending / expense if expense > 0 else 0
-    investment_rate = investment_amount / income if income > 0 else 0
-    
-    # รวมข้อมูลอินพุต
-    user_data = np.array([[savings_rate, discretionary_ratio, essential_ratio, investment_rate, transaction_count]])
-    
-    # Normalize ข้อมูล
-    user_data_scaled = scaler.transform(user_data)
-    
-    # ทำนายผล
-    cluster_pred = kmeans.predict(user_data_scaled)[0]
-    
-    # ปรับแมปชื่อกลุ่มให้อ่านง่ายและตรงตามผลลัพธ์โมเดล
-    cluster_mapping = {
-        0: {"name": "Cluster 3", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มเน้นความคุ้มค่าและความปลอดภัยทางการเงิน ไม่ชอบความเสี่ยง เน้นการออมและควบคุมค่าใช้จ่าย"},
-        1: {"name": "Cluster 2", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มขับเคลื่อนด้วยไลฟ์สไตล์ มีความยืดหยุ่นในการใช้จ่ายเพื่อความสุขส่วนตัวสูง"},
-        2: {"name": "Cluster 1", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มแอคทีฟ มีความถี่ในการทำธุรกรรมสูง มุ่งเน้นการสร้างความมั่งคั่งและการลงทุน"}
-    }
-    
-    res = cluster_mapping[cluster_pred]
-    
-    st.success(f"🎉 ผลการจัดกลุ่ม: คุณอยู่ใน **{res['name']}**")
-    st.info(res['desc'])
+    # ⚠️ ตรวจสอบว่าผู้ใช้กรอกข้อมูลหรือยัง หากค่ารายได้และรายจ่ายยังเป็น 0 จะขึ้นแจ้งเตือน
+    if income <= 0 or expense <= 0:
+        st.warning("⚠️ กรุณากรอก 'รายได้' และ 'รายจ่ายรวม' ที่มากกว่า 0 บาท ก่อนทำการทำนายกลุ่มครับ")
+    else:
+        # คำนวณตัวแปรอัตราส่วนตามสูตร Formula
+        discretionary_ratio = discretionary_spending / expense
+        essential_ratio = essential_spending / expense
+        investment_rate = investment_amount / income
+        
+        # รวมข้อมูลอินพุต
+        user_data = np.array([[savings_rate, discretionary_ratio, essential_ratio, investment_rate, transaction_count]])
+        
+        # Normalize ข้อมูล
+        user_data_scaled = scaler.transform(user_data)
+        
+        # ทำนายผล
+        cluster_pred = kmeans.predict(user_data_scaled)[0]
+        
+        # ปรับแมปชื่อกลุ่มให้อ่านง่ายและตรงตามผลลัพธ์โมเดล
+        cluster_mapping = {
+            0: {"name": "Cluster 3", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มเน้นความคุ้มค่าและความปลอดภัยทางการเงิน ไม่ชอบความเสี่ยง เน้นการออมและควบคุมค่าใช้จ่าย"},
+            1: {"name": "Cluster 2", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มขับเคลื่อนด้วยไลฟ์สไตล์ มีความยืดหยุ่นในการใช้จ่ายเพื่อความสุขส่วนตัวสูง"},
+            2: {"name": "Cluster 1", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มแอคทีฟ มีความถี่ในการทำธุรกรรมสูง มุ่งเน้นการสร้างความมั่งคั่งและการลงทุน"}
+        }
+        
+        res = cluster_mapping[cluster_pred]
+        
+        st.success(f"🎉 ผลการจัดกลุ่ม: คุณอยู่ใน **{res['name']}**")
+        st.info(res['desc'])
