@@ -23,19 +23,19 @@ with open('kmeans_model.pkl', 'rb') as f:
 
 st.subheader("📝 กรอกข้อมูลทางการเงินเพื่อทดสอบทำนายกลุ่ม")
 
-# ช่องรับข้อมูลจากผู้ใช้
+# ช่องรับข้อมูลจากผู้ใช้ (ตั้งค่าเริ่มต้น value = 0 ทั้งหมด)
 col1, col2 = st.columns(2)
 
 with col1:
-    income = st.number_input("รายได้ต่อเดือน (บาท)", min_value=1000.0, value=30000.0)
-    expense = st.number_input("รายจ่ายรวมต่อเดือน (บาท)", min_value=1000.0, value=20000.0)
-    savings_rate = st.slider("อัตราส่วนการออม (Savings Rate)", 0.0, 1.0, 0.2)
-    transaction_count = st.slider("จำนวนครั้งการทำรายการต่อเดือน", 1, 150, 40)
+    income = st.number_input("รายได้ต่อเดือน (บาท)", min_value=0.0, value=0.0, step=1000.0)
+    expense = st.number_input("รายจ่ายรวมต่อเดือน (บาท)", min_value=0.0, value=0.0, step=1000.0)
+    savings_rate = st.slider("อัตราส่วนการออม (Savings Rate)", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+    transaction_count = st.slider("จำนวนครั้งการทำรายการต่อเดือน", min_value=0, max_value=150, value=0, step=1)
 
 with col2:
-    essential_spending = st.number_input("ค่าใช้จ่ายจำเป็น (บาท)", min_value=0.0, value=12000.0)
-    discretionary_spending = st.number_input("ค่าใช้จ่ายตามใจ/ไม่จำเป็น (บาท)", min_value=0.0, value=8000.0)
-    investment_amount = st.number_input("เงินลงทุนต่อเดือน (บาท)", min_value=0.0, value=3000.0)
+    essential_spending = st.number_input("ค่าใช้จ่ายจำเป็น (บาท)", min_value=0.0, value=0.0, step=1000.0)
+    discretionary_spending = st.number_input("ค่าใช้จ่ายตามใจ/ไม่จำเป็น (บาท)", min_value=0.0, value=0.0, step=1000.0)
+    investment_amount = st.number_input("เงินลงทุนต่อเดือน (บาท)", min_value=0.0, value=0.0, step=500.0)
 
 if st.button("🔍 ทำนายกลุ่มผู้ใช้ (Predict Cluster)"):
     # คำนวณตัวแปรอัตราส่วนตามสูตร Formula
@@ -52,12 +52,14 @@ if st.button("🔍 ทำนายกลุ่มผู้ใช้ (Predict Clu
     # ทำนายผล
     cluster_pred = kmeans.predict(user_data_scaled)[0]
     
-    st.success(f"🎉 ผลการจัดกลุ่ม: คุณอยู่ใน **Cluster {cluster_pred + 1}**")
+    # ปรับแมปชื่อกลุ่มให้อ่านง่ายและตรงตามผลลัพธ์โมเดล
+    cluster_mapping = {
+        0: {"name": "Cluster 3", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มเน้นความคุ้มค่าและความปลอดภัยทางการเงิน ไม่ชอบความเสี่ยง เน้นการออมและควบคุมค่าใช้จ่าย"},
+        1: {"name": "Cluster 2", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มขับเคลื่อนด้วยไลฟ์สไตล์ มีความยืดหยุ่นในการใช้จ่ายเพื่อความสุขส่วนตัวสูง"},
+        2: {"name": "Cluster 1", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มแอคทีฟ มีความถี่ในการทำธุรกรรมสูง มุ่งเน้นการสร้างความมั่งคั่งและการลงทุน"}
+    }
     
-    # อธิบายลักษณะกลุ่ม
-    if cluster_pred == 0:
-        st.info("📌 **ลักษณะกลุ่ม:** กลุ่มเน้นความคุ้มค่าและความปลอดภัยทางการเงิน ไม่ชอบความเสี่ยง เน้นการออมและควบคุมค่าใช้จ่าย")
-    elif cluster_pred == 1:
-        st.info("📌 **ลักษณะกลุ่ม:** กลุ่มขับเคลื่อนด้วยไลฟ์สไตล์ มีความยืดหยุ่นในการใช้จ่ายเพื่อความสุขส่วนตัวสูง")
-    else:
-        st.info("📌 **ลักษณะกลุ่ม:** กลุ่มแอคทีฟ มีความถี่ในการทำธุรกรรมสูง มุ่งเน้นการสร้างความมั่งคั่งและการลงทุน")
+    res = cluster_mapping[cluster_pred]
+    
+    st.success(f"🎉 ผลการจัดกลุ่ม: คุณอยู่ใน **{res['name']}**")
+    st.info(res['desc'])
