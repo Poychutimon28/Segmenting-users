@@ -1,0 +1,370 @@
+{
+  "environment": {
+    "python": "3.13.16",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.1",
+    "seed": 42,
+    "n_restart": 200,
+    "n_bootstrap": 200,
+    "n_permutation": 200,
+    "data_sha256": "f15cd4f03db5070407957a8d206fa430907ea5caf896f0fa2609b9eb9304cb29",
+    "orange_sha256": "96ce81614bca4b1584252998a5e2b1def89ab6b83820f42d4fd45bc25f1c0c56"
+  },
+  "data": {
+    "n_records": 3000,
+    "n_users": 944,
+    "users_with_1_record": 127,
+    "records_per_user_median": 3.0,
+    "records_per_user_max": 11,
+    "share_users_essential_ratio_gt_1": 0.10699152542372882,
+    "essential_ratio_max": 2.731541992978666,
+    "mean_sum_essential_plus_discretionary_over_expense": 0.9372432906639449
+  },
+  "orange_export": {
+    "n_rows": 944,
+    "clusters": [
+      "C1",
+      "C2",
+      "C3"
+    ],
+    "max_abs_diff_z_vs_recomputed": 4.9981035934454354e-05,
+    "silhouette_recomputed_from_orange_labels": 0.2644969733255993,
+    "orange_column_Silhouette_mean": 0.580472125,
+    "corr_orange_Silhouette_column_vs_recomputed": 0.9993500365095659,
+    "inertia_orange_partition": 1679.1775390781197
+  },
+  "profile": {
+    "C1": {
+      "n": 165,
+      "discretionary_ratio": 0.249362,
+      "essential_ratio": 1.069351,
+      "investment_rate": 0.09658,
+      "monthly_income": 4092.009,
+      "share": 0.174788,
+      "silhouette_mean": 0.093928,
+      "share_negative_silhouette": 0.363636
+    },
+    "C2": {
+      "n": 266,
+      "discretionary_ratio": 0.16167,
+      "essential_ratio": 0.709409,
+      "investment_rate": 0.152511,
+      "monthly_income": 3651.372312,
+      "share": 0.28178,
+      "silhouette_mean": 0.214438,
+      "share_negative_silhouette": 0.086466
+    },
+    "C3": {
+      "n": 513,
+      "discretionary_ratio": 0.152779,
+      "essential_ratio": 0.696077,
+      "investment_rate": 0.078923,
+      "monthly_income": 4191.563191,
+      "share": 0.543432,
+      "silhouette_mean": 0.345315,
+      "share_negative_silhouette": 0.0
+    }
+  },
+  "quality": {
+    "silhouette_by_k_sklearn": {
+      "2": 0.33354315980169486,
+      "3": 0.2647724922407359,
+      "4": 0.24626886122564803,
+      "5": 0.2272919200143797,
+      "6": 0.23218358000354983
+    },
+    "orange_widget": {
+      "2": 0.333,
+      "3": 0.264,
+      "4": 0.245,
+      "5": 0.227,
+      "6": 0.232
+    },
+    "silhouette_k3_orange_partition": 0.2644969733255993,
+    "davies_bouldin_k3_orange_partition": 1.215857271754223,
+    "calinski_harabasz_k3_orange_partition": 323.01704569102793
+  },
+  "restarts": {
+    "inertia_orange_partition": 1679.1775390781197,
+    "inertia_min_over_restarts": 1678.9516155651518,
+    "inertia_max_over_restarts": 1918.269957301062,
+    "n_runs_within_5_inertia_of_best": 197,
+    "smallest_cluster_size_range_among_those": [
+      104,
+      177
+    ],
+    "ari_vs_orange_median_among_those": 0.950280637454075,
+    "ari_vs_orange_min_among_those": 0.8093476812926081
+  },
+  "bootstrap": {
+    "ari_mean": 0.766252118446138,
+    "ari_p05": 0.5981852190037087,
+    "ari_median": 0.7894155600805188,
+    "ari_min": 0.2587325922147647
+  },
+  "null_baseline": {
+    "observed_silhouette_k3": 0.2647724922407359,
+    "null_mean": 0.2481498750077592,
+    "null_p05": 0.23417343840954188,
+    "null_p95": 0.2639609635785756,
+    "null_max": 0.27515303811899094,
+    "p_value_ge_observed": 0.03980099502487562
+  },
+  "algorithms": [
+    {
+      "method": "k-Means (Orange partition)",
+      "silhouette": 0.264497,
+      "ari_vs_orange": 1.0
+    },
+    {
+      "method": "Ward",
+      "silhouette": 0.196869,
+      "ari_vs_orange": 0.159076
+    },
+    {
+      "method": "GMM (full covariance)",
+      "silhouette": 0.290898,
+      "ari_vs_orange": 0.322733
+    }
+  ],
+  "variable_sets": [
+    {
+      "variant": "A: 16 ตัวแปรดิบ (ทุกคอลัมน์.ows)",
+      "n_rows": 944,
+      "n_features": 16,
+      "sil_k2": 0.073999,
+      "sil_k3": 0.043379,
+      "sil_k4": 0.0425,
+      "sil_k5": 0.044146,
+      "sil_k6": 0.033735,
+      "davies_bouldin_k3": 3.573851,
+      "ari_vs_orange_k3": 0.050058
+    },
+    {
+      "variant": "B: 6 ตัวแปร (โมเดล.ows เดิม)",
+      "n_rows": 944,
+      "n_features": 6,
+      "sil_k2": 0.18162,
+      "sil_k3": 0.1231,
+      "sil_k4": 0.114691,
+      "sil_k5": 0.11549,
+      "sil_k6": 0.118558,
+      "davies_bouldin_k3": 2.092515,
+      "ari_vs_orange_k3": 0.201171
+    },
+    {
+      "variant": "C: 3 อัตราส่วน (โมเดลที่รายงาน)",
+      "n_rows": 944,
+      "n_features": 3,
+      "sil_k2": 0.333543,
+      "sil_k3": 0.264772,
+      "sil_k4": 0.246269,
+      "sil_k5": 0.227292,
+      "sil_k6": 0.232184,
+      "davies_bouldin_k3": 1.227102,
+      "ari_vs_orange_k3": 0.939112
+    },
+    {
+      "variant": "D: 3 อัตราส่วน ตัวหารเป็นรายได้ทั้งหมด",
+      "n_rows": 944,
+      "n_features": 3,
+      "sil_k2": 0.314004,
+      "sil_k3": 0.229553,
+      "sil_k4": 0.224544,
+      "sil_k5": 0.225037,
+      "sil_k6": 0.225565,
+      "davies_bouldin_k3": 1.41891,
+      "ari_vs_orange_k3": 0.252309
+    },
+    {
+      "variant": "E: คำนวณอัตราส่วนรายเดือนก่อน แล้วเฉลี่ยรายผู้ใช้",
+      "n_rows": 944,
+      "n_features": 3,
+      "sil_k2": 0.430449,
+      "sil_k3": 0.29291,
+      "sil_k4": 0.301391,
+      "sil_k5": 0.246756,
+      "sil_k6": 0.232508,
+      "davies_bouldin_k3": 1.161722,
+      "ari_vs_orange_k3": 0.677909
+    },
+    {
+      "variant": "F: ระดับรายการ (ไม่ Group by) 3 อัตราส่วน",
+      "n_rows": 3000,
+      "n_features": 3,
+      "sil_k2": 0.356358,
+      "sil_k3": 0.332569,
+      "sil_k4": 0.333716,
+      "sil_k5": 0.295988,
+      "sil_k6": 0.280207,
+      "davies_bouldin_k3": 0.974223,
+      "ari_vs_orange_k3": null
+    }
+  ],
+  "external": [
+    {
+      "variable": "monthly_income",
+      "note": "เชื่อมโดยตรง: เป็นตัวหารของ investment_rate",
+      "p_raw": 2.532738506e-27,
+      "H": 122.4809927599,
+      "epsilon_sq": 0.1298844038,
+      "mean_C1": 4092.0090002886,
+      "mean_C2": 3651.3723117439,
+      "mean_C3": 4191.5631913369,
+      "p_holm": 2.279464656e-26
+    },
+    {
+      "variable": "actual_savings",
+      "note": "เชื่อมทางอ้อม: ขึ้นกับรายได้และรายจ่าย",
+      "p_raw": 6.300342938e-41,
+      "H": 185.1307694924,
+      "epsilon_sq": 0.1963210705,
+      "mean_C1": 1778.9818522367,
+      "mean_C2": 826.2067053944,
+      "mean_C3": 1171.5259780856,
+      "p_holm": 6.300342938e-40
+    },
+    {
+      "variable": "savings_rate",
+      "note": "",
+      "p_raw": 0.7316481761,
+      "H": 0.6249110287,
+      "epsilon_sq": 0.000662684,
+      "mean_C1": 0.2232415584,
+      "mean_C2": 0.2256449565,
+      "mean_C3": 0.2255072924,
+      "p_holm": 1.0
+    },
+    {
+      "variable": "savings_goal_met",
+      "note": "ใช้สัดส่วนเดือนที่ทำได้ตามเป้า (ค่าเฉลี่ยของ 0/1)",
+      "p_raw": 3e-10,
+      "H": 43.831013864,
+      "epsilon_sq": 0.0464803965,
+      "mean_C1": 0.1993506494,
+      "mean_C2": 0.0472983053,
+      "mean_C3": 0.0933855402,
+      "p_holm": 2.4e-09
+    },
+    {
+      "variable": "transaction_count",
+      "note": "",
+      "p_raw": 0.5822786304,
+      "H": 1.0816123987,
+      "epsilon_sq": 0.0011469909,
+      "mean_C1": 58.2091919192,
+      "mean_C2": 59.8560325326,
+      "mean_C3": 59.5198720707,
+      "p_holm": 1.0
+    },
+    {
+      "variable": "subscription_services",
+      "note": "",
+      "p_raw": 0.9530699439,
+      "H": 0.0961339692,
+      "epsilon_sq": 0.0001019448,
+      "mean_C1": 4.9811255411,
+      "mean_C2": 5.0023526077,
+      "mean_C3": 4.972082282,
+      "p_holm": 1.0
+    },
+    {
+      "variable": "credit_score",
+      "note": "",
+      "p_raw": 0.5184202026,
+      "H": 1.3139383272,
+      "epsilon_sq": 0.0013933598,
+      "mean_C1": 681.1498412698,
+      "mean_C2": 678.1572669498,
+      "mean_C3": 680.1167710944,
+      "p_holm": 1.0
+    },
+    {
+      "variable": "debt_to_income_ratio",
+      "note": "",
+      "p_raw": 0.7265318657,
+      "H": 0.63894587,
+      "epsilon_sq": 0.0006775672,
+      "mean_C1": 0.3504321789,
+      "mean_C2": 0.3507537513,
+      "mean_C3": 0.3498827364,
+      "p_holm": 1.0
+    },
+    {
+      "variable": "financial_advice_score",
+      "note": "",
+      "p_raw": 0.0783265938,
+      "H": 5.0937361868,
+      "epsilon_sq": 0.005401629,
+      "mean_C1": 52.4369018759,
+      "mean_C2": 48.4340139716,
+      "mean_C3": 50.3258535016,
+      "p_holm": 0.5482861568
+    },
+    {
+      "variable": "emergency_fund",
+      "note": "",
+      "p_raw": 0.3521238741,
+      "H": 2.0875445005,
+      "epsilon_sq": 0.0022137269,
+      "mean_C1": 1049.1724157287,
+      "mean_C2": 980.1989083206,
+      "mean_C3": 1000.9756778837,
+      "p_holm": 1.0
+    }
+  ],
+  "min_records": [
+    {
+      "min_records_per_user": 1,
+      "n_users": 944,
+      "silhouette_k3": 0.264772,
+      "ari_vs_orange_labels": 0.939112
+    },
+    {
+      "min_records_per_user": 2,
+      "n_users": 817,
+      "silhouette_k3": 0.261893,
+      "ari_vs_orange_labels": 0.703701
+    },
+    {
+      "min_records_per_user": 3,
+      "n_users": 578,
+      "silhouette_k3": 0.261488,
+      "ari_vs_orange_labels": 0.492158
+    }
+  ],
+  "er_gt1_by_cluster": {
+    "C1": {
+      "n_users": 165,
+      "n_er_gt_1": 87,
+      "share_of_cluster": 0.527273,
+      "share_of_all_er_gt_1": 0.861386
+    },
+    "C2": {
+      "n_users": 266,
+      "n_er_gt_1": 12,
+      "share_of_cluster": 0.045113,
+      "share_of_all_er_gt_1": 0.118812
+    },
+    "C3": {
+      "n_users": 513,
+      "n_er_gt_1": 2,
+      "share_of_cluster": 0.003899,
+      "share_of_all_er_gt_1": 0.019802
+    }
+  },
+  "web_model": {
+    "agreement_with_orange": "944/944",
+    "model_source": "orange_export",
+    "model_data_sha256_matches_input": true,
+    "model_orange_sha256_matches_input": true
+  },
+  "near_boundary": {
+    "threshold": 0.3,
+    "n_users_near_boundary": 198,
+    "n_users": 944,
+    "share_near_boundary": 0.2097457627118644
+  }
+}

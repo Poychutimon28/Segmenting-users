@@ -1,0 +1,4 @@
+method,silhouette,ari_vs_orange
+k-Means (Orange partition),0.2645,1.0
+Ward,0.1969,0.1591
+GMM (full covariance),0.2909,0.3227

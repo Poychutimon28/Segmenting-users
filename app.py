@@ -1,69 +1,105 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import pickle
 import os
 
-st.set_page_config(page_title="Financial Behavior Clustering App", layout="centered")
+import streamlit as st
 
-st.title("📊 ระบบจัดกลุ่มพฤติกรรมทางการเงินผู้ใช้ (k-Means)")
-st.write("แอปพลิเคชันจัดกลุ่มผู้ใช้ตามพฤติกรรมการออม การใช้จ่าย และการลงทุน")
+from segment import FEATURES, load_model, predict
 
-# เช็กว่ามีไฟล์โมเดลหรือยัง ถ้ายังไม่มีให้รันเทรนก่อนอัตโนมัติ
-if not os.path.exists('kmeans_model.pkl') or not os.path.exists('scaler.pkl'):
-    st.info("กำลังประมวลผลสร้างโมเดล k-Means จากข้อมูล...")
-    import train_model
+st.set_page_config(page_title="ระบบจัดกลุ่มพฤติกรรมทางการเงิน (ต้นแบบ)", layout="centered")
 
-# โหลด โมเดล และ Scaler
-with open('scaler.pkl', 'rb') as f:
-    scaler = pickle.load(f)
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model.json")
 
-with open('kmeans_model.pkl', 'rb') as f:
-    kmeans = pickle.load(f)
+st.title("📊 ระบบจัดกลุ่มพฤติกรรมทางการเงิน (ต้นแบบ)")
+st.write(
+    "ระบบต้นแบบสำหรับสาธิตการนำแบบจำลอง k-Means (k = 3, 3 ตัวแปรอัตราส่วน) ไปใช้งาน "
+    "กรอกข้อมูลรายเดือนเพื่อดูว่าอยู่ใกล้ศูนย์กลางของกลุ่มใดมากที่สุด"
+)
+st.warning(
+    "แบบจำลองฝึกจากชุดข้อมูลสังเคราะห์ (Kaggle: Personal Finance Tracker Dataset) "
+    "ผลลัพธ์ใช้เพื่อการสาธิตเท่านั้น ไม่ใช่คำแนะนำทางการเงินและไม่ใช่การวินิจฉัยพฤติกรรมจริง"
+)
 
-st.subheader("📝 กรอกข้อมูลทางการเงินเพื่อทดสอบทำนายกลุ่ม")
+if not os.path.exists(MODEL_PATH):
+    st.error("ไม่พบไฟล์ model.json กรุณารัน `python train_model.py` ก่อน")
+    st.stop()
 
-# ช่องรับข้อมูลจากผู้ใช้ (ตั้งค่าเริ่มต้น value = 0 ทั้งหมด)
+
+@st.cache_resource
+def get_model():
+    return load_model(MODEL_PATH)
+
+
+model = get_model()
+
+st.subheader("📝 กรอกข้อมูลรายเดือน (หน่วย: บาท)")
 col1, col2 = st.columns(2)
-
 with col1:
-    income = st.number_input("รายได้ต่อเดือน (บาท)", min_value=0.0, value=0.0, step=1000.0)
-    expense = st.number_input("รายจ่ายรวมต่อเดือน (บาท)", min_value=0.0, value=0.0, step=1000.0)
-    savings_rate = st.slider("อัตราส่วนการออม (Savings Rate)", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    transaction_count = st.slider("จำนวนครั้งการทำรายการต่อเดือน", min_value=0, max_value=150, value=0, step=1)
-
+    income = st.number_input("รายได้ต่อเดือน", min_value=0.0, value=0.0, step=1000.0)
+    expense = st.number_input("รายจ่ายรวมต่อเดือน", min_value=0.0, value=0.0, step=1000.0)
+    investment = st.number_input("เงินลงทุนต่อเดือน", min_value=0.0, value=0.0, step=500.0)
 with col2:
-    essential_spending = st.number_input("ค่าใช้จ่ายจำเป็น (บาท)", min_value=0.0, value=0.0, step=1000.0)
-    discretionary_spending = st.number_input("ค่าใช้จ่ายตามใจ/ไม่จำเป็น (บาท)", min_value=0.0, value=0.0, step=1000.0)
-    investment_amount = st.number_input("เงินลงทุนต่อเดือน (บาท)", min_value=0.0, value=0.0, step=500.0)
+    essential = st.number_input("ค่าใช้จ่ายจำเป็น", min_value=0.0, value=0.0, step=1000.0)
+    discretionary = st.number_input("ค่าใช้จ่ายไม่จำเป็น/ตามใจ", min_value=0.0, value=0.0, step=500.0)
 
-if st.button("🔍 ทำนายกลุ่มผู้ใช้ (Predict Cluster)"):
-    # ⚠️ ตรวจสอบว่าผู้ใช้กรอกข้อมูลหรือยัง หากค่ารายได้และรายจ่ายยังเป็น 0 จะขึ้นแจ้งเตือน
+if st.button("🔍 ทำนายกลุ่ม"):
     if income <= 0 or expense <= 0:
-        st.warning("⚠️ กรุณากรอก 'รายได้' และ 'รายจ่ายรวม' ก่อนทำการทำนายกลุ่มครับ")
+        st.warning("⚠️ กรุณากรอก 'รายได้' และ 'รายจ่ายรวม' ให้มากกว่า 0")
     else:
-        # คำนวณตัวแปรอัตราส่วนตามสูตร Formula
-        discretionary_ratio = discretionary_spending / expense
-        essential_ratio = essential_spending / expense
-        investment_rate = investment_amount / income
-        
-        # รวมข้อมูลอินพุต
-        user_data = np.array([[savings_rate, discretionary_ratio, essential_ratio, investment_rate, transaction_count]])
-        
-        # Normalize ข้อมูล
-        user_data_scaled = scaler.transform(user_data)
-        
-        # ทำนายผล
-        cluster_pred = kmeans.predict(user_data_scaled)[0]
-        
-        # ปรับแมปชื่อกลุ่มให้อ่านง่ายและตรงตามผลลัพธ์โมเดล
-        cluster_mapping = {
-            0: {"name": "Cluster 1", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มเน้นความคุ้มค่าและความปลอดภัยทางการเงิน ไม่ชอบความเสี่ยง เน้นการออมและควบคุมค่าใช้จ่าย"},
-            1: {"name": "Cluster 2", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มขับเคลื่อนด้วยไลฟ์สไตล์ มีความยืดหยุ่นในการใช้จ่ายเพื่อความสุขส่วนตัวสูง"},
-            2: {"name": "Cluster 3", "desc": "📌 **ลักษณะกลุ่ม:** กลุ่มแอคทีฟ มีความถี่ในการทำธุรกรรมสูง มุ่งเน้นการสร้างความมั่งคั่งและการลงทุน"}
-        }
-        
-        res = cluster_mapping[cluster_pred]
-        
-        st.success(f"🎉 ผลการจัดกลุ่ม: คุณอยู่ใน **{res['name']}**")
-        st.info(res['desc'])
+        res = predict(model, income, expense, essential, discretionary, investment)
+        st.success(f"ใกล้ศูนย์กลางของกลุ่ม **{res['cluster_label']} — {res['cluster_name']}** มากที่สุด")
+
+        dr, er, ir = res["features"]
+        st.write(
+            f"ตัวแปรที่คำนวณได้: สัดส่วนรายจ่ายไม่จำเป็น = {dr:.3f}, "
+            f"สัดส่วนรายจ่ายจำเป็น = {er:.3f}, สัดส่วนเงินลงทุนต่อรายได้ = {ir:.3f}"
+        )
+
+        lo_s, hi_s = model["sum_ratio_range"]
+        sum_ratio = (essential + discretionary) / expense
+        if sum_ratio < lo_s or sum_ratio > hi_s:
+            st.info(
+                f"ค่าใช้จ่ายจำเป็นรวมกับไม่จำเป็นเท่ากับ {sum_ratio:.2f} เท่าของรายจ่ายรวม "
+                f"ซึ่งอยู่นอกช่วงที่พบในข้อมูลฝึก (เปอร์เซ็นไทล์ที่ 1–99 = {lo_s:.2f}–{hi_s:.2f} เท่า) "
+                "กรุณาตรวจค่าที่กรอก"
+            )
+        if res["outside_training_range"]:
+            thai = {
+                "discretionary_ratio": "สัดส่วนรายจ่ายไม่จำเป็น",
+                "essential_ratio": "สัดส่วนรายจ่ายจำเป็น",
+                "investment_rate": "สัดส่วนเงินลงทุนต่อรายได้",
+            }
+            st.info(
+                "ค่าต่อไปนี้อยู่นอกช่วงที่พบบ่อยในข้อมูลฝึก (เปอร์เซ็นไทล์ที่ 1–99) "
+                "ผลการจัดกลุ่มจึงน่าเชื่อถือน้อยลง: "
+                + ", ".join(thai[f] for f in res["outside_training_range"])
+            )
+        if res["margin"] < model["margin_threshold"]:
+            share = model["meta"]["share_of_training_users_with_margin_lt_0.3"]
+            st.info(
+                f"ผลอยู่ใกล้ขอบระหว่างกลุ่ม: ใกล้อันดับสองคือ {res['second_name']} "
+                f"(ผลต่างของระยะห่าง = {res['margin']:.2f} หน่วยมาตรฐาน) "
+                f"ผู้ใช้ในข้อมูลฝึกประมาณ {share:.0%} อยู่ในลักษณะนี้ เพราะกลุ่มต่าง ๆ ไม่ได้แยกจากกันชัดเจน"
+            )
+
+with st.expander("ลักษณะของแต่ละกลุ่มจากข้อมูลฝึก (ค่าเฉลี่ยของผู้ใช้ในกลุ่ม)"):
+    rows = []
+    for c in model["clusters"]:
+        rows.append(
+            {
+                "กลุ่ม": f"{c['label']} — {c['name']}",
+                "จำนวนผู้ใช้": c["n"],
+                "สัดส่วนรายจ่ายไม่จำเป็น": round(c["mean_raw"]["discretionary_ratio"], 3),
+                "สัดส่วนรายจ่ายจำเป็น": round(c["mean_raw"]["essential_ratio"], 3),
+                "สัดส่วนเงินลงทุนต่อรายได้": round(c["mean_raw"]["investment_rate"], 3),
+            }
+        )
+    st.dataframe(rows, hide_index=True)
+    meta = model["meta"]
+    st.caption(
+        f"ฝึกจากผู้ใช้ {meta['n_users']} คน ({meta['n_records']} รายการ) | "
+        f"แหล่งการแบ่งกลุ่ม: {meta['source_of_partition']} | scikit-learn {meta['scikit_learn']} | "
+        f"ผู้ใช้ {meta['n_users_with_one_month']} คนมีข้อมูลเพียง 1 เดือน"
+    )
+    st.caption(
+        "ชื่อกลุ่มเป็นคำบรรยายตำแหน่งของศูนย์กลางกลุ่มในพื้นที่ตัวแปร 3 ตัว "
+        "ไม่ใช่การตีความบุคลิกหรือความเสี่ยงของผู้ใช้"
+    )
