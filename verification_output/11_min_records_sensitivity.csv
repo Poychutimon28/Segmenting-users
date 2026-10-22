@@ -1,4 +1,0 @@
-min_records_per_user,n_users,silhouette_k3,ari_vs_orange_labels
-1,944,0.2648,0.9391
-2,817,0.2619,0.7037
-3,578,0.2615,0.4922
