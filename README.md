@@ -30,6 +30,13 @@ streamlit run app.py
 
 ต้อง commit `model.json` ขึ้น GitHub ด้วย เพราะเว็บแอปไม่ฝึกโมเดลเอง
 
+## เวอร์ชันที่ใช้
+
+`model.json` สร้างด้วย Python 3.13.16, numpy 2.5.3, pandas 3.0.5 และ scikit-learn 1.9.1
+(บันทึกไว้ในส่วน `meta` ของ `model.json`) ส่วน `requirements.txt` ระบุเวอร์ชันขั้นต่ำ
+เพื่อให้ติดตั้งบน Streamlit Community Cloud ได้ ซึ่งเว็บแอปใช้เพียงค่าที่บันทึกใน `model.json`
+ผลการจัดกลุ่มจึงไม่ขึ้นกับเวอร์ชันของไลบรารี
+
 ## หมายเหตุ
 
 * ตัวเลขทุกตัวในบทความมาจากไฟล์ที่ส่งออกจาก Orange ในโฟลเดอร์ `Orange Mining/` เท่านั้น
