@@ -1,0 +1,6 @@
+Cluster (1),Aggregate,C1,C2,C3
+C1 C2 C3,discrete,continuous,continuous,continuous
+,,,,
+C1,Count,76.0,52.0,37.0
+C2,Count,191.0,7.0,68.0
+C3,Count,142.0,355.0,16.0

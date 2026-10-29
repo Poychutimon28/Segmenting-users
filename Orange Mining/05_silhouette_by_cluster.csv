@@ -1,0 +1,6 @@
+Cluster,user_id - Count,Silhouette (Cluster) - Mean
+C1 C2 C3,continuous,continuous
+meta,,
+C1,165,0.0939283
+C2,266,0.21444
+C3,513,0.345314

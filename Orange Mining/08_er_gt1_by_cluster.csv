@@ -1,0 +1,6 @@
+Cluster,user_id - Count,monthly_income - Count - Mean
+C1 C2 C3,continuous,continuous
+meta,,
+C1,87,2.25287
+C2,12,2
+C3,2,1.5

@@ -1,0 +1,6 @@
+Cluster,monthly_income - Mean - Mean,budget_goal - Mean - Mean,credit_score - Mean - Mean,debt_to_income_ratio - Mean - Mean,loan_payment - Mean - Mean,subscription_services - Mean - Mean,emergency_fund - Mean - Mean,transaction_count - Mean - Mean,rent_or_mortgage - Mean - Mean,financial_advice_score - Mean - Mean,actual_savings - Mean - Mean,savings_rate - Mean - Mean
+C1 C2 C3,continuous,continuous,continuous,continuous,continuous,continuous,continuous,continuous,continuous,continuous,continuous,continuous
+meta,,,,,,,,,,,,
+C1,4092.01,2813.74,681.15,0.350432,503.377,4.98113,1049.17,58.2092,1206.68,52.4369,1778.98,0.223242
+C2,3651.37,2808.24,678.157,0.350754,503.678,5.00235,980.199,59.856,1231.76,48.434,826.207,0.225645
+C3,4191.56,2812.81,680.117,0.349883,510.852,4.97208,1000.98,59.5199,1194.81,50.3259,1171.53,0.225507

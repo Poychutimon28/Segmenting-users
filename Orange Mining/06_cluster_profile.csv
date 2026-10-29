@@ -1,0 +1,6 @@
+Cluster,discretionary_ratio - Mean,essential_ratio - Mean,investment_rate - Mean,user_id - Count
+C1 C2 C3,continuous,continuous,continuous,continuous
+meta,,,,
+C1,0.249362,1.06935,0.0965796,165
+C2,0.16167,0.709409,0.152511,266
+C3,0.152779,0.696077,0.0789231,513
